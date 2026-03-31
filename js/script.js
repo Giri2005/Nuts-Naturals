@@ -102,6 +102,24 @@ function scrollToCollections(){
   target.scrollIntoView({behavior:'smooth', block:'start'});
   setTimeout(()=>window.scrollBy(0, -86), 100);
 }
+function initMobileNav(){
+  const navbar=document.getElementById('navbar');
+  if(!navbar) return;
+  const navLinks=navbar.querySelector('.nav-links');
+  if(!navLinks) return;
+  if(navLinks.querySelector('.nav-toggle')) return;
+  navbar.classList.add('mobile-nav');
+  const toggle=document.createElement('button');
+  toggle.type='button';
+  toggle.className='nav-toggle';
+  toggle.setAttribute('aria-label','Toggle navigation');
+  toggle.innerHTML='☰';
+  navbar.insertBefore(toggle, navLinks);
+  toggle.addEventListener('click',()=>navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a,button').forEach(el=>{
+    el.addEventListener('click',()=>navLinks.classList.remove('open'));
+  });
+}
 
 /* ── SHOP ── */
 function renderShop(){
@@ -479,6 +497,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(page==='cart') renderCart();
   if(page==='checkout') renderCheckout();
   if(page==='contact') initContactForm();
+  initMobileNav();
   if(page==='admin'){
     const s=getSession();
     if(!s||s.role!=='admin'){window.location.href='login.html';return;}
