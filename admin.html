@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Nuts & Naturals</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body id="admin">
+<nav id="navbar">
+  <a class="nav-brand" href="shop.html">
+    <img class="brand-logo" src="images/logo.png" alt="Nuts & Naturals logo" onerror="this.style.display='none'">
+    <span class="nav-brand-text">
+      <span class="nav-brand-name">Nuts & Naturals</span>
+      <span class="nav-brand-sub">Premium Dry Fruits</span>
+    </span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" id="nl-home" href="shop.html">Home</a>
+    <a class="nav-link" id="nl-about" href="about.html">About</a>
+    <a class="nav-link" id="nl-contact" href="contact.html">Contact</a>
+    <a class="nav-link" id="nl-cart" href="cart.html">Cart</a>
+    <div class="nav-user" id="nav-user-info" style="display:none">
+      <span>👤 <span class="nav-user-name" id="nav-username"></span></span>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+    <a class="nav-link" id="nl-login" href="login.html">Login</a>
+    <a class="nav-cart-btn" href="cart.html">
+      🛒 <span class="cart-badge" id="cart-badge">0</span>
+    </a>
+  </div>
+</nav>
+
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-head">
+      <p>Admin Panel</p>
+      <h3>🌰 Dashboard</h3>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-link active" id="sl-0" onclick="adminTab('overview',0)">📊 Overview</div>
+      <div class="sidebar-link" id="sl-1" onclick="adminTab('products',1)">🥜 Products</div>
+      <div class="sidebar-link" id="sl-2" onclick="adminTab('add',2)">➕ Add Product</div>
+      <div class="sidebar-link" onclick="logout()">🚪 Logout</div>
+    </nav>
+  </aside>
+  <main class="admin-content" id="admin-main"></main>
+</div>
+
+<footer id="site-footer">
+  <div class="footer-brand"><img class="footer-logo" src="images/logo.png" alt="Nuts & Naturals"><span>Nuts & Naturals</span></div>
+  <div class="footer-tagline">Powered by EasyCart Vision – Digital Billing with AR Shopping Experience</div>
+  <p>Premium Dry Fruits · Naturally Sourced · Freshness Guaranteed</p>
+  <div class="footer-bottom">© 2025 Nuts & Naturals. All rights reserved.</div>
+</footer>
+<div class="toast" id="toast"></div>
+<script src="js/script.js"></script>
+</body>
+</html>

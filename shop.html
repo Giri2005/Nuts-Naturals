@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop - Nuts & Naturals</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body id="shop">
+<nav id="navbar">
+  <a class="nav-brand" href="shop.html">
+    <img class="brand-logo" src="images/logo.png" alt="Nuts & Naturals logo" onerror="this.style.display='none'">
+    <span class="nav-brand-text">
+      <span class="nav-brand-name">Nuts & Naturals</span>
+      <span class="nav-brand-sub">Premium Dry Fruits</span>
+    </span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link active" id="nl-home" href="shop.html">Home</a>
+    <a class="nav-link" id="nl-about" href="about.html">About</a>
+    <a class="nav-link" id="nl-contact" href="contact.html">Contact</a>
+    <a class="nav-link" id="nl-cart" href="cart.html">Cart</a>
+    <div class="nav-user" id="nav-user-info" style="display:none">
+      <span>👤 <span class="nav-user-name" id="nav-username"></span></span>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+    <a class="nav-link" id="nl-login" href="login.html">Login</a>
+    <a class="nav-cart-btn" href="cart.html">
+      🛒 <span class="cart-badge" id="cart-badge">0</span>
+    </a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">✦ AR Shopping Experience Available ✦</div>
+  <h1>Nature's <em>Finest</em> Nuts,<br>Delivered Fresh</h1>
+  <p class="hero-sub">Premium handpicked dry fruits sourced from the world's best orchards — now with AR visualization.</p>
+</div>
+<div class="section-wrap" id="shop-grid">
+  <div class="section-head">
+    <h2>Our Collection</h2>
+    <span id="prod-count">3 Products</span>
+  </div>
+  <div class="products-grid" id="products-grid"></div>
+  <div id="empty-shop" style="display:none;text-align:center;padding:60px 20px;color:var(--moss)">
+    <div style="font-size:3rem;margin-bottom:12px">📦</div>
+    <p>No products available. Check back soon!</p>
+  </div>
+</div>
+
+<footer id="site-footer">
+  <div class="footer-brand"><img class="footer-logo" src="images/logo.png" alt="Nuts & Naturals"><span>Nuts & Naturals</span></div>
+  <div class="footer-tagline">Powered by EasyCart Vision – Digital Billing with AR Shopping Experience</div>
+  <p>Premium Dry Fruits · Naturally Sourced · Freshness Guaranteed</p>
+  <div class="footer-bottom">© 2025 Nuts & Naturals. All rights reserved.</div>
+</footer>
+<div class="toast" id="toast"></div>
+<script src="js/script.js"></script>
+</body>
+</html>

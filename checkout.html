@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout - Nuts & Naturals</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body id="checkout">
+<nav id="navbar">
+  <a class="nav-brand" href="shop.html">
+    <img class="brand-logo" src="images/logo.png" alt="Nuts & Naturals logo" onerror="this.style.display='none'">
+    <span class="nav-brand-text">
+      <span class="nav-brand-name">Nuts & Naturals</span>
+      <span class="nav-brand-sub">Premium Dry Fruits</span>
+    </span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" id="nl-home" href="shop.html">Home</a>
+    <a class="nav-link" id="nl-about" href="about.html">About</a>
+    <a class="nav-link" id="nl-contact" href="contact.html">Contact</a>
+    <a class="nav-link" id="nl-cart" href="cart.html">Cart</a>
+    <div class="nav-user" id="nav-user-info" style="display:none">
+      <span>👤 <span class="nav-user-name" id="nav-username"></span></span>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+    <a class="nav-link" id="nl-login" href="login.html">Login</a>
+    <a class="nav-cart-btn" href="cart.html">
+      🛒 <span class="cart-badge" id="cart-badge">0</span>
+    </a>
+  </div>
+</nav>
+
+<div class="checkout-wrap">
+  <div class="section-head"><h2>Checkout</h2></div>
+  <div class="payment-section" id="pay-section">
+    <h3>💳 Select Payment Method</h3>
+    <div class="payment-options">
+      <label class="payment-opt">
+        <input type="radio" name="payment" value="Cash on Delivery (CoD)" onchange="selectPayment(this)">
+        <span class="pay-icon">💵</span>
+        <div><div class="pay-label">Cash on Delivery</div><div class="pay-desc">Pay in cash when your order arrives</div></div>
+      </label>
+      <label class="payment-opt">
+        <input type="radio" name="payment" value="Online Banking" onchange="selectPayment(this)">
+        <span class="pay-icon">🏦</span>
+        <div><div class="pay-label">Online Banking</div><div class="pay-desc">Net banking / NEFT / RTGS transfer</div></div>
+      </label>
+      <label class="payment-opt">
+        <input type="radio" name="payment" value="UPI" onchange="selectPayment(this)">
+        <span class="pay-icon">📱</span>
+        <div><div class="pay-label">UPI</div><div class="pay-desc">Google Pay, PhonePe, or any UPI app</div></div>
+      </label>
+    </div>
+  </div>
+  <div class="invoice-card" id="invoice-card"></div>
+  <div class="print-btns" id="print-btns">
+    <a class="btn-sec" href="cart.html">← Back to Cart</a>
+    <button class="btn-print" type="button" onclick="doPrint()">🖨️ Print Bill</button>
+  </div>
+  <div class="order-confirmed" id="order-confirmed">
+    <div class="confirmed-icon">✅</div>
+    <h2>Order Confirmed!</h2>
+    <p>Thank you for shopping at Nuts & Naturals. Your order has been placed successfully.</p>
+    <button class="btn-csh" type="button" onclick="clearCartGoHome()">Continue Shopping</button>
+  </div>
+</div>
+
+<footer id="site-footer">
+  <div class="footer-brand"><img class="footer-logo" src="images/logo.png" alt="Nuts & Naturals"><span>Nuts & Naturals</span></div>
+  <div class="footer-tagline">Powered by EasyCart Vision – Digital Billing with AR Shopping Experience</div>
+  <p>Premium Dry Fruits · Naturally Sourced · Freshness Guaranteed</p>
+  <div class="footer-bottom">© 2025 Nuts & Naturals. All rights reserved.</div>
+</footer>
+<div class="toast" id="toast"></div>
+<script src="js/script.js"></script>
+</body>
+</html>

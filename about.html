@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About - Nuts & Naturals</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body id="about">
+<nav id="navbar">
+  <a class="nav-brand" href="shop.html">
+    <img class="brand-logo" src="images/logo.png" alt="Nuts & Naturals logo" onerror="this.style.display='none'">
+    <span class="nav-brand-text">
+      <span class="nav-brand-name">Nuts & Naturals</span>
+      <span class="nav-brand-sub">Premium Dry Fruits</span>
+    </span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" id="nl-home" href="shop.html">Home</a>
+    <a class="nav-link active" id="nl-about" href="about.html">About</a>
+    <a class="nav-link" id="nl-contact" href="contact.html">Contact</a>
+    <a class="nav-link" id="nl-cart" href="cart.html">Cart</a>
+    <div class="nav-user" id="nav-user-info" style="display:none">
+      <span>👤 <span class="nav-user-name" id="nav-username"></span></span>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+    <a class="nav-link" id="nl-login" href="login.html">Login</a>
+    <a class="nav-cart-btn" href="cart.html">
+      🛒 <span class="cart-badge" id="cart-badge">0</span>
+    </a>
+  </div>
+</nav>
+
+<div class="about-hero">
+  <h1>About Nuts & Naturals</h1>
+  <p>We are a passionate team dedicated to bringing the world's finest nuts, seeds, and dry fruits straight to your door — naturally sourced, freshness guaranteed.</p>
+</div>
+<div class="section-wrap">
+  <div class="about-grid">
+    <div class="about-card"><div class="icon">🌿</div><h3>100% Natural</h3><p>Every product is free from artificial preservatives, colors, and additives. Nature's goodness, untouched and pure.</p></div>
+    <div class="about-card"><div class="icon">🌍</div><h3>Global Sourcing</h3><p>Our cashews come from Kerala, almonds from California, and pistachios from Iran — chosen for unmatched quality.</p></div>
+    <div class="about-card"><div class="icon">🏆</div><h3>Quality First</h3><p>Each batch undergoes strict grading for size, moisture content, and taste before reaching your hands.</p></div>
+    <div class="about-card"><div class="icon">💚</div><h3>Health Focused</h3><p>Rich in healthy fats, proteins, and micronutrients — supporting your wellness journey, one handful at a time.</p></div>
+  </div>
+  <div class="easycart-banner">
+    <h3>⚡ Powered by EasyCart Vision</h3>
+    <p>Nuts & Naturals uses <strong>EasyCart Vision – Digital Billing with AR Shopping Experience</strong> to provide a seamless modern shopping journey with augmented reality product previews and instant digital invoicing.</p>
+  </div>
+</div>
+
+<footer id="site-footer">
+  <div class="footer-brand"><img class="footer-logo" src="images/logo.png" alt="Nuts & Naturals"><span>Nuts & Naturals</span></div>
+  <div class="footer-tagline">Powered by EasyCart Vision – Digital Billing with AR Shopping Experience</div>
+  <p>Premium Dry Fruits · Naturally Sourced · Freshness Guaranteed</p>
+  <div class="footer-bottom">© 2025 Nuts & Naturals. All rights reserved.</div>
+</footer>
+<div class="toast" id="toast"></div>
+<script src="js/script.js"></script>
+</body>
+</html>
