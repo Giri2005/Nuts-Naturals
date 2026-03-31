@@ -276,22 +276,58 @@ footer{background:var(--forest);color:rgba(200,221,208,0.7);padding:32px 6%;marg
 .toast.show{transform:translateY(0);opacity:1;}
 
 /* RESPONSIVE */
+@media(max-width:880px){
+  #navbar{padding:0 3%;min-height:64px;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+  .nav-links{width:100%;justify-content:flex-end;gap:8px;margin-top:8px;}
+  .nav-brand{gap:10px;}
+  .nav-brand-name{font-size:1.1rem;}
+  .nav-brand-sub{font-size:0.62rem;}
+  .hero{padding:56px 5% 48px;}
+  .section-wrap,.cart-wrap,.checkout-wrap{padding:36px 5%;}
+  .admin-content{padding:24px;}
+}
 @media(max-width:768px){
+  #navbar{padding:0 4%;align-items:flex-start;}
+  .nav-links{justify-content:flex-start;}
+  .nav-link,.nav-cart-btn,.btn-logout{font-size:0.78rem;padding:8px 10px;}
+  .nav-user{flex-wrap:wrap;justify-content:flex-end;}
+  .hero{padding:48px 5% 40px;}
+  .hero-sub{font-size:0.95rem;}
+  .products-grid{grid-template-columns:1fr;}
+  .product-actions{grid-template-columns:1fr;}
+  .cart-item{flex-direction:column;align-items:flex-start;gap:12px;}
+  .cart-item-info{width:100%;}
+  .cart-item-price{width:100%;text-align:left;margin-top:8px;}
+  .cart-summary-box{margin-top:18px;}
   .admin-layout{grid-template-columns:1fr;}
   .admin-sidebar{display:none;}
   .form-grid{grid-template-columns:1fr;}
   .about-grid,.contact-grid{grid-template-columns:1fr;}
   .admin-stats{grid-template-columns:repeat(3,1fr);}
-}
-@media(max-width:540px){
-  .products-grid{grid-template-columns:1fr;}
-  .admin-stats{grid-template-columns:1fr;}
   .invoice-head{flex-direction:column;gap:16px;}
   .inv-meta-col{text-align:left;}
   .invoice-body{padding:20px;}
   .invoice-foot{flex-direction:column;gap:6px;text-align:center;}
   .print-btns{flex-direction:column;}
   .inv-totals{width:100%;}
+  .inv-table{display:block;overflow-x:auto;width:100%;}
+  .inv-table th,.inv-table td{white-space:nowrap;}
+}
+@media(max-width:540px){
+  .nav-links{justify-content:center;}
+  .nav-brand{width:100%;justify-content:center;}
+  .nav-brand-text{text-align:center;}
+  .nav-links{padding-bottom:10px;}
+  .hero{padding:40px 5% 36px;}
+  .section-wrap,.cart-wrap,.checkout-wrap{padding:28px 5%;}
+  .footer{padding:28px 5%;}
+  .invoice-card{margin:0;}
+  .nav-link,.nav-cart-btn,.btn-logout{font-size:0.75rem;}
+  .product-name{font-size:1.1rem;}
+  .product-price{font-size:1rem;}
+  .order-confirmed{padding:40px 16px;}
+  .about-hero h1{font-size:2.2rem;}
+  .footer{font-size:0.75rem;}
 }
 
 /* PRINT */
