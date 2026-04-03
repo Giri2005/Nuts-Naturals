@@ -22,6 +22,7 @@
     <a class="nav-link" id="nl-contact" href="contact.html">Contact</a>
     <a class="nav-link" id="nl-cart" href="cart.html">Cart</a>
     <div class="nav-user" id="nav-user-info" style="display:none">
+      <a class="nav-link" id="nl-profile" href="profile.html">Profile</a>
       <span>👤 <span class="nav-user-name" id="nav-username"></span></span>
       <button class="btn-logout" onclick="logout()">Logout</button>
     </div>
@@ -45,13 +46,12 @@
     </div>
     <div class="login-error" id="login-error"></div>
     <div class="form-group">
-      <input type="text" id="login-user" placeholder="Username" autocomplete="off">
+      <input type="text" id="login-user" placeholder="Email Id" autocomplete="off">
     </div>
     <div class="form-group">
       <input type="password" id="login-pass" placeholder="Password">
     </div>
-    <button class="btn-primary" type="button" onclick="doLogin()">Sign In →</button>
-    <div class="login-hint" id="login-hint">Enter your login details above.</div>
+    <button class="btn-primary" type="button" onclick="doLogin()">Sign In →</button>    <p style="text-align:center;margin-top:16px"><a href="register.html">New customer? Register here</a></p>    <div class="login-hint" id="login-hint">Enter your login details above.</div>
   </div>
 </div>
 

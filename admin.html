@@ -6,6 +6,7 @@
 <title>Admin - Nuts & Naturals</title>
 <link rel="stylesheet" href="css/style.css">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body id="admin">
 <nav id="navbar">
@@ -22,10 +23,12 @@
     <a class="nav-link" id="nl-contact" href="contact.html">Contact</a>
     <a class="nav-link" id="nl-cart" href="cart.html">Cart</a>
     <div class="nav-user" id="nav-user-info" style="display:none">
+      <a class="nav-link" id="nl-profile" href="profile.html">Profile</a>
       <span>👤 <span class="nav-user-name" id="nav-username"></span></span>
       <button class="btn-logout" onclick="logout()">Logout</button>
     </div>
     <a class="nav-link" id="nl-login" href="login.html">Login</a>
+
     <a class="nav-cart-btn" href="cart.html">
       🛒 <span class="cart-badge" id="cart-badge">0</span>
     </a>
@@ -42,6 +45,9 @@
       <div class="sidebar-link active" id="sl-0" onclick="adminTab('overview',0)">📊 Overview</div>
       <div class="sidebar-link" id="sl-1" onclick="adminTab('products',1)">🥜 Products</div>
       <div class="sidebar-link" id="sl-2" onclick="adminTab('add',2)">➕ Add Product</div>
+      <div class="sidebar-link" id="sl-3" onclick="adminTab('customers',3)">👥 Customers</div>
+      <div class="sidebar-link" id="sl-4" onclick="adminTab('orders',4)">📦 Orders</div>
+      <div class="sidebar-link" id="sl-5" onclick="adminTab('analytics',5)">📈 Analytics</div>
       <div class="sidebar-link" onclick="logout()">🚪 Logout</div>
     </nav>
   </aside>

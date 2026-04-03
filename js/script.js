@@ -11,19 +11,8 @@ function getProducts(){
   const s=localStorage.getItem('nn_products');
   if(s){
     try{
-      const stored=JSON.parse(s);
-      const defaultImg={1:'images/cashew.webp',2:'images/almond.png',3:'images/pistachio.webp'};
-      const defaultAR={1:'https://giri2005.github.io/AR-Images/cashew.html',2:'https://giri2005.github.io/AR-Images/almond.html',3:'https://giri2005.github.io/AR-Images/pistachio.html'};
-      const normalized=stored.map(item=>({
-        ...item,
-        img:item.img||defaultImg[item.id]||'',
-        arLink:(!item.arLink||item.arLink.includes('easycart.ar')) ? defaultAR[item.id]||'' : item.arLink
-      }));
-      const normalizedJson=JSON.stringify(normalized);
-      if(normalizedJson!==s) localStorage.setItem('nn_products',normalizedJson);
-      return normalized;
+      return JSON.parse(s);
     }catch(e){
-      localStorage.setItem('nn_products',JSON.stringify(DEFAULT_PRODUCTS));
       return DEFAULT_PRODUCTS;
     }
   }
@@ -37,6 +26,9 @@ function getOrders(){return JSON.parse(localStorage.getItem('nn_orders')||'[]');
 function saveOrders(o){localStorage.setItem('nn_orders',JSON.stringify(o));}
 function addOrder(order){const orders=getOrders();orders.unshift(order);saveOrders(orders);}
 function setOrderDelivered(orderId){const orders=getOrders();const order=orders.find(o=>o.id===orderId);if(!order||order.status==='Delivered')return;order.status='Delivered';saveOrders(orders);showToast('✅ Order marked delivered.');if(document.body.id==='admin') renderAdmin('overview',0);}
+function getCustomers(){return JSON.parse(localStorage.getItem('nn_customers')||'[]');}
+function saveCustomers(c){localStorage.setItem('nn_customers',JSON.stringify(c));}
+function addCustomer(customer){const customers=getCustomers();customers.push(customer);saveCustomers(customers);}
 function getSession(){return JSON.parse(localStorage.getItem('nn_session')||'null');}
 function saveSession(s){localStorage.setItem('nn_session',JSON.stringify(s));}
 function clearSession(){localStorage.removeItem('nn_session');}
@@ -53,10 +45,15 @@ let loginRole='customer';
 function setLoginTab(role){
   loginRole=role;
   document.querySelectorAll('.login-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&role==='customer')||(i===1&&role==='admin')));
-  const adminHint=document.getElementById('login-hint-admin');
-  const customerHint=document.getElementById('login-hint-customer');
-  if(adminHint) adminHint.style.display=role==='admin'?'block':'none';
-  if(customerHint) customerHint.style.display=role==='customer'?'block':'none';
+  const userInput=document.getElementById('login-user');
+  const loginHint=document.getElementById('login-hint');
+  if(userInput){
+    userInput.placeholder=role==='admin'?'Username':'Email';
+    userInput.type=role==='admin'?'text':'email';
+  }
+  if(loginHint){
+    loginHint.textContent=role==='admin'?'Admin login: username "admin" and password "1234".':'Customer login with registered email and password.';
+  }
   const err=document.getElementById('login-error');
   if(err) err.classList.remove('show');
 }
@@ -72,7 +69,10 @@ function doLogin(){
     if(u==='admin'&&p==='1234'){saveSession({role:'admin',name:'Admin'});err.classList.remove('show');updateNavAuth();showPage('admin');}
     else{err.textContent='Invalid admin credentials.';err.classList.add('show');}
   } else {
-    saveSession({role:'customer',name:u});err.classList.remove('show');updateNavAuth();showPage('shop');showToast('👋 Welcome, '+u+'!');
+    const customers=getCustomers();
+    const customer=customers.find(c=>c.email===u&&c.password===p);
+    if(customer){saveSession({role:'customer',name:customer.name,email:customer.email});err.classList.remove('show');updateNavAuth();showPage('shop');showToast('👋 Welcome, '+customer.name+'!');}
+    else{err.textContent='Invalid customer credentials.';err.classList.add('show');}
   }
 }
 function logout(){
@@ -81,8 +81,10 @@ function logout(){
 function updateNavAuth(){
   const s=getSession();
   const loginLink=document.getElementById('nl-login');
+  const profileLink=document.getElementById('nl-profile');
   const userInfo=document.getElementById('nav-user-info');
   if(loginLink) loginLink.style.display=s?'none':'';
+  if(profileLink) profileLink.style.display=(s&&s.role==='customer')?'':'none';
   if(userInfo) userInfo.style.display=s?'flex':'none';
   if(s && document.getElementById('nav-username')){
     document.getElementById('nav-username').textContent=s.name;
@@ -91,11 +93,16 @@ function updateNavAuth(){
 
 /* ── NAVIGATION ── */
 function showPage(pg){
-  const map={shop:'shop.html',about:'about.html',contact:'contact.html',cart:'cart.html',login:'login.html',admin:'admin.html',checkout:'checkout.html'};
+  const map={shop:'shop.html',about:'about.html',contact:'contact.html',cart:'cart.html',login:'login.html',register:'register.html',profile:'profile.html',admin:'admin.html',checkout:'checkout.html'};
   const target=map[pg];
   if(target) window.location.href=target;
 }
-function goHome(){ window.location.href='shop.html'; }
+function clearAllData(){
+  if(confirm('Are you sure you want to clear all data? This will remove all products, customers, orders, and cart items.')){
+    localStorage.clear();
+    location.reload();
+  }
+}
 function scrollToCollections(){
   const target=document.getElementById('shop-grid');
   if(!target) return;
@@ -125,6 +132,16 @@ function initMobileNav(){
 function renderShop(){
   const grid=document.getElementById('products-grid');
   if(!grid) return;
+  const welcomeMessage=document.getElementById('welcome-message');
+  const session=getSession();
+  if(welcomeMessage){
+    if(session && session.role==='customer'){
+      welcomeMessage.textContent='Welcome back, '+session.name+'! Check the latest products below.';
+      welcomeMessage.style.display='block';
+    } else {
+      welcomeMessage.style.display='none';
+    }
+  }
   const prods=getProducts();
   const empty=document.getElementById('empty-shop');
   const count=document.getElementById('prod-count');
@@ -315,8 +332,10 @@ function createOrderRecord(){
   const now=new Date();
   const date=now.toLocaleDateString('en-IN',{year:'numeric',month:'short',day:'numeric'});
   const time=now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  const session=getSession();
   const order={
     id:'ORD'+Date.now().toString().slice(-6),
+    customerEmail:session?.email||'Guest',
     date:`${date} ${time}`,
     payment:selPayment||'Not selected',
     total:tot,
@@ -391,6 +410,43 @@ function renderAdmin(tab,idx=0){
       <div class="admin-prod-grid">${prods.length?prods.map(p=>adminCardHTML(p)).join(''):'<p style="color:var(--sage)">No products yet.</p>'}</div>`;
   } else if(tab==='add'){
     renderProdForm(null);
+  } else if(tab==='customers'){
+    const customers=getCustomers();
+    main.innerHTML=`
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;margin-bottom:24px">Registered Customers</h2>
+      <div class="admin-panel">
+        <h3>Customer List</h3>
+        ${customers.length?`<div class="customers-table">
+          <div class="customers-row customers-head"><span>Name</span><span>Email</span><span>Registered</span></div>
+          ${customers.map(c=>`<div class="customers-row"><span>${c.name}</span><span>${c.email}</span><span>${new Date().toLocaleDateString()}</span></div>`).join('')}
+        </div>`:'<p style="color:var(--sage);margin:0;padding:16px 0">No customers registered yet.</p>'}
+      </div>`;
+  } else if(tab==='orders'){
+    const orders=getOrders();
+    const customers=getCustomers();
+    main.innerHTML=`
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;margin-bottom:24px">Order Management</h2>
+      <div class="admin-panel">
+        <h3>Filter Orders</h3>
+        <div class="form-grid">
+          <div class="form-group"><label>Customer</label><select id="filter-customer"><option value="">All Customers</option>${customers.map(c=>`<option value="${c.email}">${c.name}</option>`).join('')}</select></div>
+          <div class="form-group"><label>Month</label><select id="filter-month"><option value="">All Months</option>${Array.from({length:12},(_,i)=>`<option value="${i+1}">${new Date(0,i).toLocaleString('default',{month:'long'})}</option>`).join('')}</select></div>
+          <div class="form-group"><label>Day</label><input type="date" id="filter-day"></div>
+        </div>
+        <button class="btn-primary" type="button" onclick="filterOrders()">Apply Filter</button>
+      </div>
+      <div class="admin-panel">
+        <h3>Orders</h3>
+        <div id="orders-list">${renderOrdersList(orders)}</div>
+      </div>`;
+  } else if(tab==='analytics'){
+    main.innerHTML=`
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;margin-bottom:24px">Analytics</h2>
+      <div class="admin-panel">
+        <h3>Revenue Overview</h3>
+        <canvas id="revenue-chart" width="400" height="200"></canvas>
+      </div>`;
+    setTimeout(renderRevenueChart,100);
   }
 }
 function adminCardHTML(p){
@@ -487,12 +543,65 @@ function showToast(msg){
   toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
 }
 
+function renderProfile(){
+  const s=getSession();
+  if(!s||s.role!=='customer'){window.location.href='login.html';return;}
+  const customers=getCustomers();
+  const customer=customers.find(c=>c.email===s.email);
+  if(!customer){logout();return;}
+  document.getElementById('profile-name').textContent=customer.name;
+  document.getElementById('profile-email').textContent=customer.email;
+  document.getElementById('profile-registered').textContent=new Date(customer.registered).toLocaleDateString();
+  const orders=getOrders().filter(o=>o.customerEmail===s.email);
+  const ordersDiv=document.getElementById('profile-orders');
+  if(orders.length){
+    ordersDiv.innerHTML='<div class="orders-table"><div class="orders-row orders-head"><span>Order ID</span><span>Date</span><span>Total</span><span>Status</span></div>'+
+      orders.map(o=>`<div class="orders-row"><span>${o.id}</span><span>${o.date}</span><span>₹${o.total}</span><span><span class="order-status ${o.status==='Delivered'?'status-delivered':'status-pending'}">${o.status}</span></span></div>`).join('')+'</div>';
+  }else{
+    ordersDiv.innerHTML='<p style="color:var(--sage);margin:0;padding:16px 0">No orders yet.</p>';
+  }
+}
+
+function initChangePasswordForm(){
+  const form=document.getElementById('change-password-form');
+  if(!form) return;
+  form.addEventListener('submit',event=>{
+    event.preventDefault();
+    const currentPass=document.getElementById('current-password').value;
+    const newPass=document.getElementById('new-password').value;
+    const confirmPass=document.getElementById('confirm-password').value;
+    const s=getSession();
+    if(!s) return;
+    const customers=getCustomers();
+    const customer=customers.find(c=>c.email===s.email);
+    if(!customer) return;
+    if(customer.password!==currentPass){
+      showToast('❌ Current password is incorrect.');
+      return;
+    }
+    if(newPass.length<6){
+      showToast('❌ New password must be at least 6 characters.');
+      return;
+    }
+    if(newPass!==confirmPass){
+      showToast('❌ New passwords do not match.');
+      return;
+    }
+    customer.password=newPass;
+    saveCustomers(customers);
+    showToast('✅ Password updated successfully.');
+    form.reset();
+  });
+}
+
 /* ── INIT ── */
 document.addEventListener('DOMContentLoaded',()=>{
   updateBadge();
   updateNavAuth();
   const page=document.body.id;
   if(page==='login') setLoginTab('customer');
+  if(page==='register') initRegisterForm();
+  if(page==='profile'){ renderProfile(); initChangePasswordForm(); }
   if(page==='shop') renderShop();
   if(page==='cart') renderCart();
   if(page==='checkout') renderCheckout();
@@ -505,20 +614,77 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 });
 
-function initContactForm(){
-  const form=document.getElementById('contact-form');
+function renderOrdersList(orders){
+  return orders.length?`<div class="orders-table">
+    <div class="orders-row orders-head"><span>Order</span><span>Customer</span><span>Date</span><span>Items</span><span>Total</span><span>Status</span><span>Action</span></div>
+    ${orders.map(o=>`<div class="orders-row">
+      <span>${o.id}</span>
+      <span>${o.customer||'N/A'}</span>
+      <span>${o.date}</span>
+      <span>${o.items.length}</span>
+      <span>₹${o.total}</span>
+      <span><span class="order-status ${o.status==='Delivered'?'status-delivered':'status-pending'}">${o.status}</span></span>
+      <span class="orders-action"><button class="btn-success ${o.status==='Delivered'?'delivered':''}" type="button" onclick="setOrderDelivered('${o.id}')" ${o.status==='Delivered'?'disabled':''}>${o.status==='Delivered'?'Delivered':'Mark Delivered'}</button></span>
+    </div>`).join('')}
+  </div>`:'<p style="color:var(--sage);margin:0;padding:16px 0">No orders found.</p>';
+}
+
+function filterOrders(){
+  const customer=document.getElementById('filter-customer').value;
+  const month=document.getElementById('filter-month').value;
+  const day=document.getElementById('filter-day').value;
+  let orders=getOrders();
+  if(customer) orders=orders.filter(o=>o.customerEmail===customer);
+  if(month) orders=orders.filter(o=>{
+    const d=new Date(o.date);
+    return d.getMonth()+1==month;
+  });
+  if(day) orders=orders.filter(o=>o.date.startsWith(day));
+  document.getElementById('orders-list').innerHTML=renderOrdersList(orders);
+}
+
+function renderRevenueChart(){
+  const canvas=document.getElementById('revenue-chart');
+  if(!canvas) return;
+  const orders=getOrders();
+  const monthly={};
+  orders.forEach(o=>{
+    const d=new Date(o.date);
+    const key=`${d.getFullYear()}-${d.getMonth()+1}`;
+    monthly[key]=(monthly[key]||0)+o.total;
+  });
+  const labels=Object.keys(monthly).sort();
+  const data=labels.map(k=>monthly[k]);
+  new Chart(canvas,{
+    type:'line',
+    data:{
+      labels:labels.map(k=>k.replace('-','/')),
+      datasets:[{label:'Revenue (₹)',data:data,borderColor:'var(--amber)',backgroundColor:'rgba(212,160,64,0.1)'}]
+    },
+    options:{responsive:true}
+  });
+}
+
+function initRegisterForm(){
+  const form=document.getElementById('register-form');
   if(!form) return;
   form.addEventListener('submit',event=>{
     event.preventDefault();
-    const name=document.getElementById('contact-name');
-    const email=document.getElementById('contact-email');
-    const message=document.getElementById('contact-message');
-    if(!name||!email||!message) return;
-    if(!name.value.trim()||!email.value.trim()||!message.value.trim()){
-      showToast('⚠️ Please fill in all fields.');
-      return;
-    }
-    showToast('✉️ Message sent! We\'ll get back to you soon.');
-    form.reset();
+    const name=document.getElementById('reg-name');
+    const email=document.getElementById('reg-email');
+    const pass=document.getElementById('reg-pass');
+    const err=document.getElementById('register-error');
+    if(!name||!email||!pass||!err) return;
+    const n=name.value.trim();
+    const e=email.value.trim();
+    const p=pass.value.trim();
+    if(!n||!e||!p){err.textContent='Please fill in all fields.';err.classList.add('show');return;}
+    if(p.length<6){err.textContent='Password must be at least 6 characters.';err.classList.add('show');return;}
+    const customers=getCustomers();
+    if(customers.find(c=>c.email===e)){err.textContent='Email already registered.';err.classList.add('show');return;}
+    addCustomer({name:n,email:e,password:p,registered:new Date().toISOString()});
+    err.classList.remove('show');
+    showToast('✅ Registration successful! Please login.');
+    setTimeout(()=>showPage('login'),2000);
   });
 }
