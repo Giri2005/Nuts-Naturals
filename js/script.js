@@ -3,21 +3,35 @@
 const DEFAULT_PRODUCTS=[
   {id:1,name:"Cashew",emoji:"🥜",price:1196,desc:"Creamy, buttery whole cashews from Kerala's finest farms. Rich in healthy fats and magnesium.",arLink:"https://giri2005.github.io/AR-Images/cashew.html",img:"images/cashew.webp"},
   {id:2,name:"Almond",emoji:"🫘",price:1396,desc:"California-grade premium almonds, packed with Vitamin E and a satisfying crunch.",arLink:"https://giri2005.github.io/AR-Images/almond.html",img:"images/almond.png"},
-  {id:3,name:"Pistachio",emoji:"🌿",price:1796,desc:"Hand-selected Iranian pistachios with a rich, nutty flavour and emerald-green kernels.",arLink:"https://giri2005.github.io/AR-Images/pistachio.html",img:"images/pistachio.webp"}
+  {id:3,name:"Pistachio",emoji:"🌿",price:1796,desc:"Hand-selected Iranian pistachios with a rich, nutty flavour and emerald-green kernels.",arLink:"https://giri2005.github.io/AR-Images/pistachio.html",img:"images/pistachio.webp"},
+  {id:4,name:"Apricot",emoji:"🥭",price:1296,desc:"Sweet and juicy dried apricots, rich in fiber and antioxidants.",arLink:"https://giri2005.github.io/AR-Images/Apricot.html",img:"images/Apricot.png"},
+  {id:5,name:"Black Grapes",emoji:"🍇",price:1496,desc:"Plump black grapes, naturally sweet and packed with vitamins.",arLink:"https://giri2005.github.io/AR-Images/BGrapes.html",img:"images/BGrapes.png"},
+  {id:6,name:"Fig",emoji:"🫠",price:1596,desc:"Delicious dried figs, a natural source of calcium and fiber.",arLink:"https://giri2005.github.io/AR-Images/Fig.html",img:"images/Fig.webp"},
+  {id:7,name:"Dates",emoji:"🌴",price:1696,desc:"Premium Medjool dates, sweet and chewy with natural energy.",arLink:"https://giri2005.github.io/AR-Images/Dates.html",img:"images/Dates.jpeg"},
+  {id:8,name:"Gulkand",emoji:"🍯",price:1896,desc:"Traditional rose petal preserve, a sweet and aromatic delicacy.",arLink:"https://giri2005.github.io/AR-Images/Gulkand.html",img:"images/Gulkand.png"},
+  {id:9,name:"Pumpkin Seeds",emoji:"🎃",price:1196,desc:"Roasted pumpkin seeds, crunchy and full of healthy fats.",arLink:"https://giri2005.github.io/AR-Images/Seeds.html",img:"images/Seeds.png"},
+  {id:10,name:"Walnuts",emoji:"🌰",price:1996,desc:"Premium walnuts, rich in omega-3s and perfect for snacking.",arLink:"https://giri2005.github.io/AR-Images/Walnuts.html",img:"images/Walnuts.jpeg"}
 ];
 
 /* ── STORAGE ── */
 function getProducts(){
   const s=localStorage.getItem('nn_products');
+  let prods = DEFAULT_PRODUCTS;
   if(s){
     try{
-      return JSON.parse(s);
+      prods = JSON.parse(s);
+      if(prods.length < DEFAULT_PRODUCTS.length){
+        prods = DEFAULT_PRODUCTS;
+        localStorage.setItem('nn_products',JSON.stringify(prods));
+      }
     }catch(e){
-      return DEFAULT_PRODUCTS;
+      prods = DEFAULT_PRODUCTS;
+      localStorage.setItem('nn_products',JSON.stringify(prods));
     }
+  } else {
+    localStorage.setItem('nn_products',JSON.stringify(prods));
   }
-  localStorage.setItem('nn_products',JSON.stringify(DEFAULT_PRODUCTS));
-  return DEFAULT_PRODUCTS;
+  return prods;
 }
 function saveProducts(p){localStorage.setItem('nn_products',JSON.stringify(p));}
 function getCart(){return JSON.parse(localStorage.getItem('nn_cart')||'[]');}
