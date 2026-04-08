@@ -14,24 +14,31 @@ const DEFAULT_PRODUCTS=[
 ];
 
 /* ── STORAGE ── */
+function migrateStoredProducts(stored){
+  const defaultsById = Object.fromEntries(DEFAULT_PRODUCTS.map(p=>[p.id,p]));
+  const migrated = stored.map(prod => {
+    const def = defaultsById[prod.id];
+    if (!def) return prod;
+    return {...prod, img: def.img};
+  });
+  DEFAULT_PRODUCTS.forEach(def => {
+    if (!migrated.some(p=>p.id===def.id)) migrated.push(def);
+  });
+  return migrated;
+}
+
 function getProducts(){
   const s=localStorage.getItem('nn_products');
   let prods = DEFAULT_PRODUCTS;
   if(s){
     try{
-      prods = JSON.parse(s);
-      if(prods.length < DEFAULT_PRODUCTS.length){
+      const stored = JSON.parse(s);
+      if(!Array.isArray(stored) || stored.length < DEFAULT_PRODUCTS.length){
         prods = DEFAULT_PRODUCTS;
-        localStorage.setItem('nn_products',JSON.stringify(prods));
       } else {
-        // Update img paths from DEFAULT_PRODUCTS
-        prods.forEach((p, i) => {
-          if (DEFAULT_PRODUCTS[i]) {
-            p.img = DEFAULT_PRODUCTS[i].img;
-          }
-        });
-        localStorage.setItem('nn_products',JSON.stringify(prods));
+        prods = migrateStoredProducts(stored);
       }
+      localStorage.setItem('nn_products',JSON.stringify(prods));
     }catch(e){
       prods = DEFAULT_PRODUCTS;
       localStorage.setItem('nn_products',JSON.stringify(prods));
